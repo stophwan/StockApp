@@ -13,7 +13,6 @@ function NewsItem({item}){
             <Text>{item.headline}</Text>
         </View>
     )
-
 }
 
 function NewsList({data}){

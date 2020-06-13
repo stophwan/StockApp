@@ -12,7 +12,6 @@ export function createSymbol(){
                 exchange: 'US',
                 token: API_KEY
             }})
-            console.log(result.data);
             dispatch({type: 'CREATE_SYMBOL', payload: result.data})
         }catch(error){
 

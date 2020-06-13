@@ -1,10 +1,25 @@
-import * as React from 'react';
+import React, {useEffect} from 'react'
 import { Text, View } from 'react-native';
+import { useSelector, useDispatch } from "react-redux";
+import {createSymbol} from '../actions';
+
+import SearchBar from '../components/SearchBar';
+
+
 
 export default function Home() {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text>Home!</Text>
-      </View>
-    );
+
+  const companySymbol = useSelector(state => state.companySymbol)
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(createSymbol());
+  });
+
+  return (
+    <>
+    {companySymbol&&
+    <SearchBar companySymbol={companySymbol}/>
+    }
+    </>
+  );
 }
