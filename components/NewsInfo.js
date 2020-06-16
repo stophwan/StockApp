@@ -1,5 +1,5 @@
 import React from 'react';
-import { SafeAreaView, View,  Text } from 'react-native';
+import { SafeAreaView, View,  Text, StyleSheet } from 'react-native';
 import styled from "styled-components/native";
 
 const FlatList = styled.FlatList`
@@ -9,7 +9,7 @@ const FlatList = styled.FlatList`
 
 function NewsItem({item}){
     return(
-        <View>
+        <View style={styles.news_content}> 
             <Text>{item.headline}</Text>
         </View>
     )
@@ -27,3 +27,12 @@ function NewsList({data}){
 }
 
 export default NewsList;
+
+const styles = StyleSheet.create({
+    news_content:{
+        padding: 25,
+        borderBottomColor: '#fff'
+    }
+}
+
+)

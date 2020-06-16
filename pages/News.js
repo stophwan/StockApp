@@ -2,10 +2,13 @@ import React,{useEffect} from 'react';
 import { Text, View } from 'react-native';
 import { useSelector , useDispatch } from "react-redux";
 import {createNews} from '../actions';
+import { createStackNavigator } from '@react-navigation/stack';
 
 import NewsInfo from '../components/NewsInfo';
 
-export default function News() {
+const Stack = createStackNavigator();
+
+function NewsScreen() {
   const news = useSelector(state => state.news)
   const dispatch = useDispatch();
   useEffect(() => {
@@ -19,5 +22,13 @@ export default function News() {
       </View>
       }
     </>
+  );
+}
+
+export default function News() {
+  return (
+      <Stack.Navigator>
+        <Stack.Screen name="News" component={NewsScreen} />
+      </Stack.Navigator>
   );
 }

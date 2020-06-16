@@ -9,8 +9,9 @@ import {
   Text,
   Image,
   TouchableHighlight,
-  ScrollView,
   KeyboardAvoidingView,
+  Platform,
+  StatusBar,
 } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import Animated, { Easing } from 'react-native-reanimated'
@@ -23,7 +24,7 @@ const height = Dimensions.get('window').height
 
 
 class SearchBar extends React.Component {
-  
+
   constructor(props){
     super(props)
 
@@ -79,6 +80,12 @@ class SearchBar extends React.Component {
     this.refs.input.focus()
 
   }
+  // componentWillMount(){
+  //   this.startHeaderHeight = 80
+  //   if(Platform.OS == 'android'){
+  //     this.startHeaderHeight = 100 + StatusBar.currentHeight
+  //   }
+// 
 
   _onBlur = () => {
     // update state
@@ -91,14 +98,14 @@ class SearchBar extends React.Component {
       easing: Easing.inOut(Easing.ease)
     }
     const back_button_opacity_config = {
-      duration: 50,
+      duration: 200,
       toValue: 0,
       easing: Easing.inOut(Easing.ease)
     }
 
     // content
     const content_translate_y_config = {
-      duration: 0,
+      duration: 200,
       toValue: height,
       easing: Easing.inOut(Easing.ease)
     }
@@ -124,7 +131,7 @@ class SearchBar extends React.Component {
         item.symbol.toLowerCase().includes(value.toLowerCase()))
     this.setState({filteredData, searchKey: value} )
   }
-  
+
   render(){
     return (
       <>
@@ -182,48 +189,27 @@ class SearchBar extends React.Component {
                 this.state.searchKey === ''
                 ?
                   <View style={styles.image_placeholder_container}>
-                    {/* <Image 
-                      source={require('../Assets/Search-Illustration.jpg')} 
-                      style={styles.image_placeholder}
-                    /> */}
                     <Text style={styles.image_placeholder_text}>
                       Enter a few words{"\n"}
                       to search 
                     </Text>
                   </View>
                 :
-                //   <ScrollView>
-                //     <View style={styles.search_item}>
-                //       <Icon style={styles.item_icon} name="search" size={16} color="#cccccc" />
-                //       <Text>aapl</Text>
-                //     </View>
-                //     <View style={styles.search_item}>
-                //       <Icon style={styles.item_icon} name="search" size={16} color="#cccccc" />
-                //       <Text>nflx</Text>
-                //     </View>
-                //     <View style={styles.search_item}>
-                //       <Icon style={styles.item_icon} name="search" size={16} color="#cccccc" />
-                //       <Text>aa</Text>
-                //     </View>
-                //     <View style={styles.search_item}>
-                //       <Icon style={styles.item_icon} name="search" size={16} color="#cccccc" />
-                //       <Text>mfst</Text>
-                //     </View> */}
-                //         {/* {filterData.map((item, index)=>{
-                //             return <View style={styles.search_item}>
-                //             <Icon style={styles.item_icon} name="search" size={16} color="#cccccc" />
-                //             <Text>{item.symbol}</Text>
-                //         </View>
-                //         })}
-                //   </ScrollView>
+                  <View>
                     <FlatList
                     data = {this.state.filteredData}
-                    renderItem={({item}) => <View>
-                        <Text>{item.symbol}</Text>
-                        </View>
-                        }
+                    renderItem={({item}) =>
+                      <TouchableHighlight
+                      activeOpacity={1}
+                      underlayColor={"#ccd0d5"}
+                      onPress = {() => {}}>
+                          <View style={styles.content_list}>
+                            <Text style={styles.content_text}>{item.symbol}</Text>
+                          </View>
+                      </TouchableHighlight> }
                     keyExtractor={item=>item.symbol}
                     />
+                  </View>
               }
             </View>
           </SafeAreaView>
@@ -237,7 +223,8 @@ export default SearchBar;
 
 const styles = StyleSheet.create({
   header_safe_area: {
-    zIndex: 1000
+    flex: 1,
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0
   },
   header: {
     height: 50,
@@ -249,7 +236,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    position: 'relative'
+    position: 'relative',
+    // height: this.startHeaderHeight
   },
   search_icon_box: {
     width:40,
@@ -338,5 +326,16 @@ const styles = StyleSheet.create({
   },
   item_icon: {
     marginRight: 15
+  },
+  content_list: {
+    flexDirection: 'row',
+    padding: 30,
+    borderBottomColor: '#fff',
+    alignItems: 'center'
+  },
+  content_text:{
+    fontSize: 16,
+    fontWeight: '400',
+    paddingHorizontal: 20
   }
 })
