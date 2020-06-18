@@ -8,9 +8,9 @@ import {
   Text,
   Image,
   TouchableHighlight,
+  FlatList
 } from 'react-native'
 import { connect } from 'react-redux'
-import { FlatList } from 'react-native-gesture-handler'
 
 class Search extends React.Component {
 
@@ -21,7 +21,7 @@ class Search extends React.Component {
     this.state = {
         searchKey: '',
         data : this.props.companySymbol,
-        filteredData : this.props.companySymbol
+        filteredData : this.props.companySymbol,
     }
     
     }
@@ -30,116 +30,113 @@ class Search extends React.Component {
         item.symbol.toLowerCase().includes(value.toLowerCase()))
         this.setState({filteredData, searchKey: value} )
     }
+
   
     render(){
       return(
           <>
-          <SafeAreaView style={styles.content_safe_area}>
-            <View style={styles.input_inner}> 
+          <View style={styles.content_safe_area}>
+            <View style={styles.input}> 
+            <Image 
+                  source={require('../assets/searchicon.png')} 
+                  style={{width: 30, height: 30}}
+            />
+            <View style={styles.textinput}>
                 <TextInput 
                 placeholder="Search Symbol"
                 clearButtonMode="always"
                 value={this.state.searchKey}
                 onChangeText={this.handleSearch}
-                style={styles.input}
+                style={styles.input_none}
                 /> 
+            </View>
+            </View>
+            <View>
                 <View style={styles.separator} />
                 {
                     this.state.searchKey === ''
                     ?
                     <View style={styles.image_placeholder_container}>
+                        <Image 
+                        source={require('../assets/caticon.png')} 
+                        style={{width: '50%', height: '20%'}}
+                        />
                         <Text style={styles.image_placeholder_text}>
                         Enter a few words{"\n"}
                         to search 
                         </Text>
                     </View>
                     :
-                    <View>
+                    <View style={styles.list}>
                         <FlatList
                         data = {this.state.filteredData}
                         renderItem={({item}) =>
+                        <>
                         <TouchableHighlight
                         activeOpacity={1}
                         underlayColor={"#ccd0d5"}
-                        onPress = {() => {}}>
+                        onPress = {() => 
+                            this.props.navigation.navigate('Detail', {
+                                company: item.symbol
+                            })
+                        }>
                             <View style={styles.content_list}>
                                 <Text style={styles.content_text}>{item.symbol}</Text>
+                                <Text style={styles.des_text}>{item.description}</Text>
                             </View>
-                        </TouchableHighlight> }
+                        </TouchableHighlight> 
+                        </>
+                        }
                         keyExtractor={item=>item.symbol}
                         />
                     </View>
                 }
-                </View>
-          </SafeAreaView>
+            </View>
+          </View>
           </>
       )
       }
 }
 
 const styles = StyleSheet.create({
-    input_inner:{
-        flex:1,
-        paddingTop: 20
+    content_safe_area:{
+        backgroundColor: 'white'
     },
-    input: {
-      flex: 1,
-      alignItems: 'center',
-      height: 20,
-      backgroundColor: 'white',
-      borderRadius: 16,
-      paddingHorizontal: 16,
-      fontSize: 15
+    input:{
+        flexDirection: "row",
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingTop: 5,
+        height: 60,
     },
-    content_safe_area: {
-      flex: 1,
-      backgroundColor: 'white'
+    textinput:{
+        width: '80%',
+        height: 40,
+        marginLeft:10
     },
-    content_inner: {
-      flex: 1,
-      paddingTop: 20
+    // list:{
+    //     backgroundColor:'white'
+    // },
+    image_placeholder_container:{
+        alignItems:'center',
+        justifyContent: 'center',
+        height: '100%'
     },
-    separator: {
-      marginTop: 5,
-      height: 1,
-      backgroundColor: '#e6e4eb'
-    },
-    image_placeholder_container: {
-      flex: 1,
-      flexDirection: 'column',
-      justifyContent: 'center',
-      marginTop: '-50%'
-    },
-    image_placeholder: {
-      width: 150,
-      height: 113,
-      alignSelf: 'center'
-    },
-    image_placeholder_text: {
-      textAlign: 'center',
-      color: 'gray',
-      marginTop: 5
-    },
-    search_item: {
-      flexDirection: 'row',
-      height: 40,
-      alignItems: 'center',
-      borderBottomWidth: 1,
-      borderBottomColor: '#e6e4eb',
-      marginLeft: 16
-    },
-    item_icon: {
-      marginRight: 15
+    image_placeholder_text:{
+        fontSize: 16
     },
     content_list: {
-      flexDirection: 'row',
-      padding: 30,
+      flexDirection: 'column',
+      padding: 20,
       borderBottomColor: '#fff',
-      alignItems: 'center'
     },
     content_text:{
       fontSize: 16,
       fontWeight: '400',
+      paddingHorizontal: 20
+    },
+    des_text:{
+      color: 'gray',
       paddingHorizontal: 20
     }
   })
